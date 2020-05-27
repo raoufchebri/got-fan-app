@@ -1,0 +1,14 @@
+.ui .card {
+    // width: 50%;
+}
+
+.ui.link.cards {
+    display: flex;
+    justify-content: center;
+}
+
+.ten.wide.column .ui.card {
+    width: auto;
+    height: auto;
+    padding: 5%;
+}

@@ -1,0 +1,174 @@
+  <!-- <div id="primary" class="ui right action left icon huge input">
+    <i class="search icon"></i>
+    <input matInput #query type="text" placeholder="Search">
+    <div class="ui basic floating dropdown button">
+      <div class="text">All</div>
+      <i class="dropdown icon"></i>
+      <div class="menu">
+        <div class="item" (click)="bookFilter = true; characterFilter = true; houseFilter = true;">All</div>
+        <div class="item" (click)="bookFilter = true; characterFilter = false; houseFilter = false;">Books</div>
+        <div class="item" (click)="bookFilter = false; characterFilter = true; houseFilter = false;">Characters</div>
+        <div class="item" (click)="bookFilter = false; characterFilter = false; houseFilter = true;">Houses</div>
+      </div>
+    </div>
+    <div class="ui basic button">
+      <i class="filter icon" (click)="filter = ! filter"></i>
+    </div>
+    <div class="ui button" (click)="onSearch(query.value)">Search</div>
+  </div> -->
+
+  <form id="primary" class="ngm ui grid">
+    <div class="eleven wide column">
+      <mat-form-field class="search">
+        <input #query matInput placeholder="Search">
+      </mat-form-field>
+    </div>
+    <div class="three wide column">
+      <mat-form-field>
+        <mat-label>Resources</mat-label>
+        <mat-select [formControl]="resourceControl">
+          <mat-option *ngFor="let resource of resources" [value]="resource">
+            {{resource}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="one wide column middle aligned">
+      <a mat-button aria-label="Advanced filter" (click)="toggleFilter()">
+        <mat-icon>filter_list</mat-icon>
+      </a>
+    </div>
+    <div class="one wide column middle aligned">
+      <a mat-icon-button aria-label="Search" (click)="onSearch(query.value)">
+        <mat-icon>search</mat-icon>
+      </a>
+    </div>
+  </form>
+
+  <div *ngIf="warning" class="ui warning message transition">
+    <i class="close icon" (click)="warning = false"></i>
+    <div class="header">
+      Please select a resource to use advanced filters!
+    </div>
+  </div>
+
+  <div id="secondary">
+    <div class="ui big action input">
+      <input type="text" placeholder="Search">
+      <div class="ui button">
+        <i class="filter icon"></i>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!filter" class="filters">
+    <!-- Book Filter -->
+    <div *ngIf="resourceControl.value === 'Books'" class="ngm book filter">
+      <mat-form-field style="margin-right: 10px;">
+        <mat-label>Start date</mat-label>
+        <input matInput [min]="minDate" [max]="maxDate" [matDatepicker]="startpicker" [formControl]="startDate">
+        <mat-datepicker-toggle matSuffix [for]="startpicker"></mat-datepicker-toggle>
+        <mat-datepicker #startpicker></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>End date</mat-label>
+        <input matInput [min]="minDate" [max]="maxDate" [matDatepicker]="endpicker" [formControl]="endDate">
+        <mat-datepicker-toggle matSuffix [for]="endpicker"></mat-datepicker-toggle>
+        <mat-datepicker #endpicker></mat-datepicker>
+      </mat-form-field>
+    </div>
+
+    <!-- Character Filter -->
+    <div *ngIf="resourceControl.value === 'Characters'" class="ngm character filter">
+      <mat-form-field>
+        <mat-label>Gender</mat-label>
+        <mat-select [formControl]="genderControl">
+          <mat-option *ngFor="let gender of genders" [value]="gender">
+            {{gender}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Culture</mat-label>
+        <mat-select [formControl]="cultureControl">
+          <mat-option *ngFor="let culture of cultures" [value]="culture">
+            {{culture}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Is Alive</mat-label>
+        <mat-select [formControl]="isAliveControl">
+          <mat-option *ngFor="let option of isAlive" [value]="option">
+            {{option}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <!-- House Filter -->
+
+    <div *ngIf="resourceControl.value === 'Houses'" class="ngm house filter ui  grid">
+      <div class="five wide column">
+        <mat-form-field>
+          <mat-label>Region</mat-label>
+          <mat-select [formControl]="regionControl">
+            <mat-option *ngFor="let region of regions" [value]="region">
+              {{region}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="five wide column">
+        <mat-form-field>
+          <mat-label>Words</mat-label>
+          <mat-select [formControl]="cultureControl">
+            <mat-option *ngFor="let culture of cultures" [value]="culture">
+              {{culture}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="five wide column">
+        <mat-form-field>
+          <mat-label>Titles</mat-label>
+          <mat-select [formControl]="isAliveControl">
+            <mat-option *ngFor="let option of isAlive" [value]="option">
+              {{option}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="five wide column">
+        <mat-form-field>
+          <mat-label>Seats</mat-label>
+          <mat-select [formControl]="isAliveControl">
+            <mat-option *ngFor="let option of isAlive" [value]="option">
+              {{option}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="five wide column">
+
+        <mat-form-field>
+          <mat-label>Died Out</mat-label>
+          <mat-select [formControl]="isAliveControl">
+            <mat-option *ngFor="let option of isAlive" [value]="option">
+              {{option}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="five wide column">
+        <mat-form-field>
+          <mat-label>Ancestral Weapons</mat-label>
+          <mat-select [formControl]="isAliveControl">
+            <mat-option *ngFor="let option of isAlive" [value]="option">
+              {{option}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+  </div>

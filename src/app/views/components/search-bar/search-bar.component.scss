@@ -1,0 +1,47 @@
+#primary,
+#secondary {
+  width: 100%;
+}
+
+.filters .header {
+  margin-top: 20px;
+  // margin-bottom: 20px;
+  width: 100%;
+}
+
+.ngm {
+  font-size: 1.5em;
+}
+
+.ngm mat-form-field {
+  width: 100%;
+}
+
+.one.fields .field {
+  width: 100%;
+}
+
+.ngm.filter {
+  display: flex;
+}
+
+.ngm.filter mat-form-field {
+  margin-left: 10px;
+}
+
+@media screen and (max-width: 700px) {
+  #primary {
+    display: none;
+  }
+
+  .ngm.filter {
+    display: block;
+  }
+}
+
+@media screen and (min-width: 700px) {
+
+  #secondary {
+    display: none;
+  }
+}

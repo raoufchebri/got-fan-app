@@ -1,0 +1,38 @@
+<!-- Main menu -->
+<div id="main-menu" class="ui borderless fixed menu">
+  <div class="ui container">
+    <a [routerLink]="['/search']" routerLinkActive="router-link-active" class="item">
+      <img class="logo" src="../../../../assets/images/logo.png" style="width: 70px;">
+    </a>
+    <a [routerLink]="['/detail']" routerLinkActive="router-link-active" class="item"><i class="star icon"></i>
+      Favorite</a>
+    <div class="item right" *ngIf="user$ | async as user">
+      <img class="ui avatar image" [src]="user.photoUrl">
+      <span><b>{{ user.displayName }}</b></span>
+      <a class="item" (click)="logout()"><i class="sign-out icon"></i> Logout</a>
+    </div>
+  </div>
+</div>
+
+<!-- Sidebar menu -->
+<div id="sidebar-menu" class="ui borderless fixed menu">
+  <div class="ui container">
+    <a class="toc item" (click)="toggle()">
+      <i class="sidebar icon"></i>
+      <a [routerLink]="['/search']" routerLinkActive="router-link-active" class="item center">
+        <img class="logo" src="../../../../assets/images/logo.png" style="width: 70px;">
+      </a>
+    </a>
+    <div class="ui sidebar vertical menu" *ngIf="user$ | async as user">
+      <div class="ui row">
+        <img class="ui small circular centered image" [src]="user.photoUrl">
+        <div class="username row">
+            <span><b> {{ user.displayName }}</b></span>
+        </div>
+      </div>
+      <a [routerLink]="['/favortie']" routerLinkActive="router-link-active" class="item"><i class="star icon"></i>
+        Favorite</a>
+      <a class="item" (click)="logout()"><i class="sign-out icon"></i> Logout</a>
+    </div>
+  </div>
+</div>

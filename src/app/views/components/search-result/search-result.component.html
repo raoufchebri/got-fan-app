@@ -1,0 +1,30 @@
+<!-- <div *ngIf="items | async as data" class="search result">
+  <div *ngFor="let element of data" class="ui raised link red card">
+    <div class="content">
+      <i class="right floated like icon" style="color: red;"></i>
+      <i class="right floated star icon"></i>
+      <div class="header"><i class="ui book icon"></i> {{ element.name }}</div>
+      <div class="description">
+        <p>Author: {{ element.authors ? element.authors[0] : 'Unknown' }}</p> 
+        <div class="ui right floated heart rating" data-rating="1" data-max-rating="1"></div>
+        <div class="ui right floated star rating" data-rating="1" data-max-rating="1"></div> 
+      </div>
+    </div>
+  </div>
+</div> -->
+<div *ngIf="data$ | async as data" class="search result">
+  <a [routerLink]="getRouterLink(element)" routerLinkActive="router-link-active"  *ngFor="let element of data" class="ui raised link blue card">
+    <div class="content">
+      <div class="header"><i class="ui user icon"></i> {{ element.name === '' ? 'Unknown' : element.name }}</div>
+      <div class="description">
+        <!-- <p>Nickname: {{ element.aliases[0] ? element.aliases[0] : 'Unknown' }}</p> -->
+      </div>
+    </div>
+  </a>
+</div>
+
+
+<div infiniteScroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="50" (scrolled)="onScroll()">
+</div>
+
+<ngx-spinner></ngx-spinner>
