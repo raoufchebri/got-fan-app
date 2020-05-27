@@ -3,7 +3,7 @@ import { of, Observable, throwError, EMPTY, from } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import * as firebase from 'firebase';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { map, switchMap } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
 import { AngularFirestore } from '@angular/fire/firestore/';
 import { User } from '../models/user';
 
@@ -13,13 +13,24 @@ import { User } from '../models/user';
 export class AuthService {
   user$: Observable<User>;
 
-  constructor(public afAuth: AngularFireAuth, private afs: AngularFirestore) {    
+  constructor(public afAuth: AngularFireAuth, private afs: AngularFirestore) {
   }
 
   googleLogin() {
     const provider = new firebase.auth.GoogleAuthProvider();
     provider.addScope('https://www.googleapis.com/auth/userinfo.profile');
-    return from(this.afAuth.signInWithPopup(provider)).pipe(map(cred => cred.user));
+    const promise = this.afAuth.signInWithPopup(provider);
+    promise.then(cred => {
+      const uid = cred.user.uid;
+      this.afs.doc(`users/${uid}`).get().pipe(tap(doc => {
+
+        if (!doc.exists) {
+          const {displayName, email, phoneNumber, photoURL, refreshToken} = cred.user;
+          this.afs.doc<User>(`users/${uid}`).set({uid, displayName, email, phoneNumber, photoUrl: photoURL, refreshToken});
+        }
+      })).subscribe();
+    });
+    return from(promise).pipe(map(cred => cred.user));
   }
   loginWithEmailAndPassword() {
     return from(this.afAuth.signInWithPopup(new firebase.auth.GoogleAuthProvider())).pipe(map(cred => cred.user));

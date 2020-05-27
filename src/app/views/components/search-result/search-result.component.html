@@ -13,11 +13,23 @@
   </div>
 </div> -->
 <div *ngIf="data$ | async as data" class="search result">
-  <a [routerLink]="getRouterLink(element)" routerLinkActive="router-link-active"  *ngFor="let element of data" class="ui raised link blue card">
+  <a [routerLink]="getRouterLink(element)" routerLinkActive="router-link-active"  *ngFor="let element of data" 
+    [ngClass] = "{
+      'ui raised link card':true, 
+      'blue': element.resource === 'books', 
+      'red': element.resource === 'characters', 
+      'green': element.resource === 'houses'}">
     <div class="content">
-      <div class="header"><i class="ui user icon"></i> {{ element.name === '' ? 'Unknown' : element.name }}</div>
+      <div class="header">
+        <i [ngClass] = "{
+          'ui icon':true, 
+          'book': element.resource === 'books', 
+          'user': element.resource === 'characters', 
+          'chess rook': element.resource === 'houses'}"></i> {{ element.name === '' ? 'Unknown' : element.name }}</div>
       <div class="description">
-        <!-- <p>Nickname: {{ element.aliases[0] ? element.aliases[0] : 'Unknown' }}</p> -->
+        <p *ngIf="element.resource === 'books'">Author: {{ element.authors ? element.authors[0] : 'Unknown' }}</p>
+        <p *ngIf="element.resource === 'characters'">Nickname: {{ element.aliases[0] ? element.aliases[0] : 'Unknown' }}</p>
+        <p *ngIf="element.resource === 'houses'">Words: {{ element.words ? element.words : 'Unknown' }}</p> 
       </div>
     </div>
   </a>

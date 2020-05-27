@@ -17,7 +17,7 @@ export class UserService {
       switchMap(user => {
         // Logged in
         if (user) {
-          return this.afs.doc<firebase.User>(`users/${user.uid}`).valueChanges();
+          return this.afs.doc<User>(`users/${user.uid}`).valueChanges();
         } else {
           // Logged out
           return of(null);

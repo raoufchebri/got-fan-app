@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject, of } from 'rxjs';
 import { Query } from '../../models/query.model';
 import * as _ from 'lodash';
-import { tap } from 'rxjs/operators';
+import { tap, map } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class QueryService {
@@ -14,6 +14,8 @@ export class QueryService {
     const response = new BehaviorSubject([]);
 
     queries.forEach(query => {
+      const urlSplit = query.url.split('/');
+      const resource = urlSplit.pop();
       let url = query.url + '?' + `page=${query.page}&pageSize=${query.pageSize}&`;
       const props = Object.keys(query.filters);
       props.forEach(prop => {
@@ -22,7 +24,14 @@ export class QueryService {
           url = url + `${prop}=${value}&`;
         }
       });
-      this.http.get(url).pipe(tap(items => {
+      const items$ = this.http.get<any[]>(url).pipe(map(items => {
+        return items.map(item => {
+          return { ...item, resource };
+        });
+      }));
+
+      items$.pipe(tap(items => {
+        console.log(items);
         response.next(_.concat(response.getValue(), items));
       })).subscribe();
     });

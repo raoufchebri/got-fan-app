@@ -7,5 +7,5 @@ export interface User {
     refreshToken: string;
     photoUrl: string;
     phoneNumber: string;
-    role: Role;
+    role?: Role;
 }

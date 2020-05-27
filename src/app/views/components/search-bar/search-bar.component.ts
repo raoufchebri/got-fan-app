@@ -30,14 +30,20 @@ export class SearchBarComponent implements OnInit {
   // Characters filters
   genders = ['All', 'Male', 'Female'];
   cultures = ['All'];
-  isAlive = ['All', 'Yes', 'No'];
+  options = ['All', 'Yes', 'No'];
   genderControl = new FormControl('All');
   cultureControl = new FormControl('All');
   isAliveControl = new FormControl('All');
 
   // House filters
   regionControl = new FormControl('All');
+  wordsControl = new FormControl('All');
+  titlesControl = new FormControl('All');
+  seatsControl = new FormControl('All');
+  diedoutControl = new FormControl('All');
+  ancesteralWeaponsControl = new FormControl('All');
   regions = ['All'];
+  words = ['All'];
   warning = false;
   pageSize = 10;
 
@@ -80,9 +86,28 @@ export class SearchBarComponent implements OnInit {
       pageSize: this.pageSize
     };
 
+    // House Filters
+    const houseFilter: HouseFilter = {
+      name: query === '' ? null : query,
+      region: this.regionControl.value === 'All' ? null : this.regionControl.value,
+      hasWords: this.wordsControl.value === 'Yes' ? true : this.wordsControl.value === 'No' ? false : null,
+      hasTitles: this.titlesControl.value === 'Yes' ? true : this.titlesControl.value === 'No' ? false : null,
+      hasSeats: this.seatsControl.value === 'Yes' ? true : this.seatsControl.value === 'No' ? false : null,
+      hasDiedOut: this.diedoutControl.value === 'Yes' ? true : this.diedoutControl.value === 'No' ? false : null,
+      hasAncestralWeapons: this.ancesteralWeaponsControl.value === 'Yes' ? true
+        : this.ancesteralWeaponsControl.value === 'No' ? false : null,
+    }
+    const houseQuery: Query = {
+      url: 'https://www.anapioficeandfire.com/api/houses',
+      filters: houseFilter,
+      page: 1,
+      pageSize: this.pageSize
+    };
 
-    const queries: Query[] = resource === 'Books' ? [bookQuery] : [characterQuery];
-    this.store.dispatch(resourceActions.loadCollection({queries}));
+    const queries: Query[] = resource === 'Books' ? [bookQuery]
+      : resource === 'Characters' ? [characterQuery]
+        : resource === 'Houses' ? [houseQuery] : [bookQuery, characterQuery, houseQuery];
+    this.store.dispatch(resourceActions.loadCollection({ queries }));
   }
 
   toggleFilter() {

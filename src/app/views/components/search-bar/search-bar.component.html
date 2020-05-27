@@ -99,7 +99,7 @@
       <mat-form-field>
         <mat-label>Is Alive</mat-label>
         <mat-select [formControl]="isAliveControl">
-          <mat-option *ngFor="let option of isAlive" [value]="option">
+          <mat-option *ngFor="let option of options" [value]="option">
             {{option}}
           </mat-option>
         </mat-select>
@@ -122,9 +122,9 @@
       <div class="five wide column">
         <mat-form-field>
           <mat-label>Words</mat-label>
-          <mat-select [formControl]="cultureControl">
-            <mat-option *ngFor="let culture of cultures" [value]="culture">
-              {{culture}}
+          <mat-select [formControl]="wordsControl">
+            <mat-option *ngFor="let word of words" [value]="word">
+              {{words}}
             </mat-option>
           </mat-select>
         </mat-form-field>
@@ -132,8 +132,8 @@
       <div class="five wide column">
         <mat-form-field>
           <mat-label>Titles</mat-label>
-          <mat-select [formControl]="isAliveControl">
-            <mat-option *ngFor="let option of isAlive" [value]="option">
+          <mat-select [formControl]="titlesControl">
+            <mat-option *ngFor="let option of options" [value]="option">
               {{option}}
             </mat-option>
           </mat-select>
@@ -142,8 +142,8 @@
       <div class="five wide column">
         <mat-form-field>
           <mat-label>Seats</mat-label>
-          <mat-select [formControl]="isAliveControl">
-            <mat-option *ngFor="let option of isAlive" [value]="option">
+          <mat-select [formControl]="seatsControl">
+            <mat-option *ngFor="let option of options" [value]="option">
               {{option}}
             </mat-option>
           </mat-select>
@@ -153,8 +153,8 @@
 
         <mat-form-field>
           <mat-label>Died Out</mat-label>
-          <mat-select [formControl]="isAliveControl">
-            <mat-option *ngFor="let option of isAlive" [value]="option">
+          <mat-select [formControl]="diedoutControl">
+            <mat-option *ngFor="let option of options" [value]="option">
               {{option}}
             </mat-option>
           </mat-select>
@@ -163,8 +163,8 @@
       <div class="five wide column">
         <mat-form-field>
           <mat-label>Ancestral Weapons</mat-label>
-          <mat-select [formControl]="isAliveControl">
-            <mat-option *ngFor="let option of isAlive" [value]="option">
+          <mat-select [formControl]="ancesteralWeaponsControl">
+            <mat-option *ngFor="let option of options" [value]="option">
               {{option}}
             </mat-option>
           </mat-select>

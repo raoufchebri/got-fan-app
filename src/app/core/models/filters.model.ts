@@ -14,7 +14,7 @@ export interface CharacterFilter {
 export interface HouseFilter {
     name: string;
     region: string;
-    words: string;
+    words?: string;
     hasWords: boolean;
     hasTitles: boolean;
     hasSeats: boolean;
