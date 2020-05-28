@@ -9,20 +9,6 @@ import { UserService } from '../services/user.service';
 
 @Injectable()
 export class UserEffects {
-
-    // loadCurrent$ = createEffect(() => {
-    //     return this.actions$.pipe(
-    //         ofType(UserActions.loadCurrent),
-    //         mergeMap(() =>
-    //             this.userService.getCurrentUser().pipe(
-    //                 map(user => {
-    //                     return UserActions.loadSuccess({ user });
-    //                 }),
-    //                 catchError(error => of(UserActions.loadFailure({ error }))))
-    //         ),
-    //     );
-    // });
-
     @Effect()
     loadCurrent$ = this.actions$.pipe(
         ofType(UserActions.load),
@@ -37,8 +23,6 @@ export class UserEffects {
 
     constructor(
         private actions$: Actions,
-        private authService: AuthService,
         private userService: UserService,
-        private router: Router,
     ) { }
 }

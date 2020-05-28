@@ -41,6 +41,7 @@ import { environment } from 'src/environments/environment';
 import { AngularFireAuthModule } from '@angular/fire/auth/';
 import { AngularFireStorageModule } from '@angular/fire/storage/';
 import { UserEffects } from './core/auth/effects/user.effects';
+import { NotFoundComponent } from './views/pages/not-found/not-found.component';
 
 
 
@@ -52,7 +53,8 @@ import { UserEffects } from './core/auth/effects/user.effects';
     DetailComponent,
     MenuComponent,
     SearchBarComponent,
-    SearchResultComponent
+    SearchResultComponent,
+    NotFoundComponent
   ],
   imports: [
     BrowserModule,

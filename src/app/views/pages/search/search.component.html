@@ -1,6 +1,12 @@
 <div class="logo">
-    <img src="../../../../assets/images/targaryen.png" alt="">
+  <img src="../../../../assets/images/targaryen.png" alt="">
 </div>
 <app-search-bar></app-search-bar>
 <div class="ui divider"></div>
-<app-search-result></app-search-result>
+
+<div *ngIf="items$ | async as data" class="search result">
+    <app-search-result [items]="items$"></app-search-result>
+</div>
+
+<div infiniteScroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="100" (scrolled)="onScroll()">
+</div>

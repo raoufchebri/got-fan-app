@@ -15,3 +15,15 @@ export const selectItem = createSelector(
     selectQuery,
     (state: fromQuery.State) => state.item
 );
+export const selectFilter = createSelector(
+    selectQuery,
+    (state: fromQuery.State) => state.filter
+);
+export const selectLoadingStatus = createSelector(
+    selectQuery,
+    (state: fromQuery.State) => state.isLoading
+);
+export const selectQueryStatus = createSelector(
+    selectQuery,
+    (state: fromQuery.State) => state.isNewQuery
+);

@@ -42,7 +42,6 @@ export class AuthEffects {
         ofType(AuthActions.loginSuccess),
         tap(({uid}) => {
             localStorage.setItem(environment.uid, uid);
-            // this.store.dispatch(UserActions.loadCurrent());
             this.store.dispatch(UserActions.load({uid}));
         }),
     );

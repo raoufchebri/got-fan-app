@@ -23,7 +23,9 @@ export class MenuComponent implements OnInit {
     this.user$ = this.userService.getCurrentUser();
     this.user$.pipe(tap(user => {
       if (user) {
-        this.router.navigateByUrl('/search');
+        if (this.router.url === '/login') {
+          this.router.navigateByUrl('/search');
+        }
       }
     })).subscribe();
   }

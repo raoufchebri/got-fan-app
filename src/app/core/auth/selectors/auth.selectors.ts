@@ -7,3 +7,7 @@ export const selectUserId = createSelector(
     selectAuth,
     (state: AuthState) => state.uid
 );
+export const isLoggedIn = createSelector(
+    selectAuth,
+    (state: AuthState) => state.isLoggedIn
+);

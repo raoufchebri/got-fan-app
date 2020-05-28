@@ -10,30 +10,30 @@ export interface State {
     reponse: Book[] | Character[] | House[];
     item: Book | Character | House;
     error: string;
+    isLoading: boolean;
+    filter: string;
+    isNewQuery: boolean;
 }
 
 export const initialState: State = {
-    queries: [{
-        url: 'https://www.anapioficeandfire.com/api/books',
-        filters: {
-            name: null,
-            fromReleaseDate: null,
-            toReleaseDate: null
-        },
-        page: 1,
-        pageSize: 10
-    }],
+    queries: null,
     reponse: null,
     item: null,
-    error: null
+    error: null,
+    isLoading: false,
+    filter: null,
+    isNewQuery: false,
 };
 
 const resourceReducer = createReducer(
     initialState,
-    on(resourceActions.loadCollection, (state, action) => ({ ...state, queries: action.queries })),
-    on(resourceActions.loadSuccess, (state, action) => ({ ...state, reponse: action.response })),
-    on(resourceActions.loadOneSuccess, (state, action) => ({ ...state, item: action.response })),
-    on(resourceActions.loadFailure, (state, action) => ({ ...state, error: action.error })),
+    on(resourceActions.loadCollection, (state, action) => ({ ...state, queries: action.queries, isLoading: true, isNewQuery: true })),
+    on(resourceActions.loadNextPage, (state) => ({ ...state, isNewQuery: false })),
+    on(resourceActions.loadOne, (state) => ({ ...state, isLoading: true })),
+    on(resourceActions.loadSuccess, (state, action) => ({ ...state, reponse: action.response, isLoading: false })),
+    on(resourceActions.loadOneSuccess, (state, action) => ({ ...state, item: action.response, isLoading: false })),
+    on(resourceActions.loadFailure, (state, action) => ({ ...state, error: action.error, isLoading: false })),
+    on(resourceActions.filterOut, (state, action) => ({ ...state, filter: action.filter})),
 );
 
 export function reducer(state: State | undefined, action: Action) {

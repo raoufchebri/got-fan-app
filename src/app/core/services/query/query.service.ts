@@ -4,6 +4,9 @@ import { Observable, BehaviorSubject, of } from 'rxjs';
 import { Query } from '../../models/query.model';
 import * as _ from 'lodash';
 import { tap, map } from 'rxjs/operators';
+import { Character } from '../../models/characater.model';
+import { Book } from '../../models/book.model';
+import { House } from '../../models/house.model';
 
 @Injectable({ providedIn: 'root' })
 export class QueryService {
@@ -31,7 +34,6 @@ export class QueryService {
       }));
 
       items$.pipe(tap(items => {
-        console.log(items);
         response.next(_.concat(response.getValue(), items));
       })).subscribe();
     });
@@ -40,7 +42,6 @@ export class QueryService {
 
   getById(resource: string, id: string) {
     const URL = `https://www.anapioficeandfire.com/api/${resource}/${id}`;
-    console.log(URL);
-    return this.http.get(URL);
+    return this.http.get<Book | Character | House>(URL);
   }
 }

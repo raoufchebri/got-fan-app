@@ -5,6 +5,7 @@ import { FormControl } from '@angular/forms';
 import { BookFilter, CharacterFilter, HouseFilter } from 'src/app/core/models/filters.model';
 import { Query } from 'src/app/core/models/query.model';
 import * as resourceActions from 'src/app/core/actions/query.actions';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 declare var $: any;
 @Component({
@@ -47,10 +48,12 @@ export class SearchBarComponent implements OnInit {
   warning = false;
   pageSize = 10;
 
-  constructor(private store: Store<AppState>) { }
+  constructor(
+    private store: Store<AppState>,
+    private spinner: NgxSpinnerService
+  ) { }
 
   ngOnInit(): void {
-
   }
 
   onSearch(query: string) {
@@ -67,7 +70,8 @@ export class SearchBarComponent implements OnInit {
       url: 'https://www.anapioficeandfire.com/api/books',
       filters: bookFilters,
       page: 1,
-      pageSize: this.pageSize
+      pageSize: this.pageSize,
+      resource: 'books'
     };
 
     // Characters Filters
@@ -83,7 +87,8 @@ export class SearchBarComponent implements OnInit {
       url: 'https://www.anapioficeandfire.com/api/characters',
       filters: characterFilter,
       page: 1,
-      pageSize: this.pageSize
+      pageSize: this.pageSize,
+      resource: 'characters'
     };
 
     // House Filters
@@ -101,7 +106,8 @@ export class SearchBarComponent implements OnInit {
       url: 'https://www.anapioficeandfire.com/api/houses',
       filters: houseFilter,
       page: 1,
-      pageSize: this.pageSize
+      pageSize: this.pageSize,
+      resource: 'houses'
     };
 
     const queries: Query[] = resource === 'Books' ? [bookQuery]
@@ -116,5 +122,9 @@ export class SearchBarComponent implements OnInit {
     } else {
       this.filter = !this.filter;
     }
+  }
+
+  onFilter(filter: string) {
+    this.store.dispatch(resourceActions.filterOut({filter}));
   }
 }

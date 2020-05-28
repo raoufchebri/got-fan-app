@@ -3,13 +3,19 @@ import { Routes, RouterModule } from '@angular/router';
 import { SearchComponent } from './views/pages/search/search.component';
 import { LoginComponent } from './views/pages/login/login.component';
 import { DetailComponent } from './views/pages/detail/detail.component';
+import { AuthGuard } from './core/auth/guards/auth.guard';
+import { NotFoundComponent } from './views/pages/not-found/not-found.component';
 
 
 const routes: Routes = [
-  { path: '', redirectTo: 'search', pathMatch: 'full'},
-  { path: 'search', component: SearchComponent},
+  { path: '', canActivate: [AuthGuard], children: [
+    { path: 'search', component: SearchComponent},
+    { path: 'detail/:type/:id', component: DetailComponent},
+    { path: '', redirectTo: 'search', pathMatch: 'full'},
+  ]},
   { path: 'login', component: LoginComponent, data: {animation: 'isLeft'}},
-  { path: 'detail/:type/:id', component: DetailComponent},
+  { path: '404', component: NotFoundComponent},
+  { path: '**', redirectTo: '/404'},
 ];
 
 @NgModule({

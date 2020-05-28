@@ -4,18 +4,21 @@ import { createReducer, on, Action } from '@ngrx/store';
 export interface State {
     uid: string;
     error: string;
+    isLoggedIn: boolean;
 }
 
 export const initialState: State = {
     uid: undefined,
-    error: undefined
+    error: undefined,
+    isLoggedIn: false,
 };
 
 const authReducer = createReducer(
     initialState,
     on(authActions.loginSuccess, (state, { uid }) => ({
         ...state,
-        uid
+        uid,
+        isLoggedIn: true
     })),
     on(authActions.loginFailure, (state, { error }) => ({
         ...state,

@@ -6,77 +6,24 @@
           <img src="https://semantic-ui.com/images/avatar2/large/elyse.png">
         </div>
         <div class="content">
-          <div class="header">{{item.name}}</div>
-          <div class="meta">
-            <a>{{item.culture}}</a>
-          </div>
+          <div class="header">{{item['name'] ? item.name : 'Unknown'}}</div>
         </div>
-        <!-- <div class="extra content">
-              <span class="right floated">
-                Joined in 2013
-              </span>
-              <span>
-                <i class="user icon"></i>
-                75 Friends
-              </span>
-            </div> -->
       </div>
     </div>
   </div>
   <div class="ten wide column">
-    <div class="ui card">
-      <div class="content">
-        <div class="header">Gender</div>
-        <div class="description">{{item.gender}}</div>
-      </div>
-      <div class="content">
-        <div class="header">Culture</div>
-        <div class="description">{{item.culture ? item.culture : 'Unknown'}}</div>
-      </div>
-      <div class="content">
-        <div class="header">Born</div>
-        <div class="description">{{item.born  ? item.born : 'Unknown'}}</div>
-      </div>
-      <div class="content">
-        <div class="header">Died</div>
-        <div class="description">{{item.died  ? item.died : 'Unknown'}}</div>
-      </div>
-      <div class="content">
-        <div class="header">Titles</div>
-        <div class="description" *ngFor="let title of item.titles">{{title}}</div>
-      </div>
-      <div class="content">
-        <div class="header">Aliases</div>
-        <div class="description" *ngFor="let alias of item.aliases">{{alias}}</div>
-      </div>
-      <div class="content">
-        <div class="header">Father</div>
-        <div class="description">{{item.father ? item.father : 'Unknown'}}</div>
-      </div>
-      <div class="content">
-        <div class="header">Mother</div>
-        <div class="description">{{item.mother ? item.mother : 'Unknown'}}</div>
-      </div>
-      <div class="content">
-        <div class="header">Spouse</div>
-        <div class="description">{{item.spouse ? item.spouse : 'Unknown'}}</div>
-      </div>
-      <div class="content">
-        <div class="header">Allegiances</div>
-        <div class="description" *ngFor="let allegiance of item.allegiances">{{allegiance}}</div>
-      </div>
-      <div class="content">
-        <div class="header">Books</div>
-        <div class="description"*ngFor="let book of item.books">{{book}}</div>
-      </div>
-      <div class="content">
-        <div class="header">POV Books</div>
-        <div class="description" *ngFor="let book of item.povBooks">{{book}}</div>
-      </div>
-      <div class="content">
-        <div class="header">TV Series</div>
-        <div class="description" *ngFor="let season of item.tvSeries">{{season}}</div>
+    <div class="ui card" *ngIf="keys$ | async as keys">
+      <div class="content" *ngFor="let key of keys">
+        <div class="header">{{ camelCaseToSentence(key) }}</div>
+        <div *ngIf="isString(key)" class="description">{{item[key] ? item[key] : 'Unknown'}}</div>
+        <div *ngIf="!isString(key)" class="description">
+          <div *ngFor="let element of key">
+            {{element}}
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </div>
+
+<ngx-spinner></ngx-spinner>
