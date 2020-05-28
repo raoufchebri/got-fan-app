@@ -1,6 +1,6 @@
 import * as fromBook from './core/reducers/book.reducers';
 import * as fromCharacter from './core/reducers/character.reducers';
-import * as fromResource from './core/reducers/query.reducers';
+import * as fromResource from './core/reducers/item.reducers';
 import { ActionReducerMap } from '@ngrx/store';
 import * as fromAuth from './core/auth/reducers/auth.reducers';
 import * as fromUser from './core/auth/reducers/user.reducers';

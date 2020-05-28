@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { QueryService } from 'src/app/core/services/query/query.service';
+import { ItemService } from 'src/app/core/services/item/item.service';
 import { Observable, combineLatest } from 'rxjs';
 import { map, tap, take } from 'rxjs/operators';
 import { Book } from 'src/app/core/models/book.model';
 import { Store } from '@ngrx/store';
 import { AppState } from 'src/app/app.reducers';
-import { selectQueryCollection, selectResponseCollection, selectFilter, selectQuery } from 'src/app/core/selectors/query.selectors';
-import { Character } from 'src/app/core/models/characater.model';
-import * as queryActions from 'src/app/core/actions/query.actions';
+import { selectQueryCollection, selectResponseCollection, selectFilter, selectItemState } from 'src/app/core/selectors/item.selectors';
+import { Character } from 'src/app/core/models/character.model';
+import * as queryActions from 'src/app/core/actions/item.actions';
 
 import { BehaviorSubject } from 'rxjs';
 import * as _ from 'lodash';
@@ -38,7 +38,7 @@ export class SearchComponent implements OnInit {
     private characterService: CharacterService,
     private store: Store<AppState>,
     private spinner: NgxSpinnerService,
-    private itemService: QueryService) { }
+    private itemService: ItemService) { }
 
   ngOnInit(): void {
     this.initQuery();
@@ -46,7 +46,7 @@ export class SearchComponent implements OnInit {
   }
 
   initQuery() {
-    this.store.select(selectQuery).subscribe(item => {
+    this.store.select(selectItemState).subscribe(item => {
       const {isNewQuery} = item;
       if (isNewQuery) {
             this.items$ = new BehaviorSubject([]);

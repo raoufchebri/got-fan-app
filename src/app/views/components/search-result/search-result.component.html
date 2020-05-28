@@ -1,10 +1,11 @@
 <div *ngIf="items$ | async as data" class="search result">
   <div *ngFor="let element of data">
     <a [routerLink]="getRouterLink(element)" routerLinkActive="router-link-active" [ngClass]="{
-        'ui raised link card':true, 
-        'blue': element.resource === 'books', 
-        'red': element.resource === 'characters', 
-        'green': element.resource === 'houses'}">
+      'ui raised link card':true, 
+      'blue': element.resource === 'books', 
+      'red': element.resource === 'characters', 
+      'green': element.resource === 'houses'}"
+      >
       <div class="content">
         <i class="right floated star icon"></i>
         <div class="header">

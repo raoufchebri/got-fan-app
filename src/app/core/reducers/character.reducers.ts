@@ -1,6 +1,6 @@
 import { createReducer, on, Action } from '@ngrx/store';
 import * as characterActions from '../actions/character.actions';
-import { Character } from '../models/characater.model';
+import { Character } from '../models/character.model';
 
 export interface State {
     characters: Character[];

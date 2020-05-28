@@ -1,7 +1,7 @@
 import { createReducer, on, Action } from '@ngrx/store';
-import * as resourceActions from '../actions/query.actions';
+import * as resourceActions from '../actions/item.actions';
 import { Query } from '../models/query.model';
-import { Character } from '../models/characater.model';
+import { Character } from '../models/character.model';
 import { House } from '../models/house.model';
 import { Book } from '../models/book.model';
 

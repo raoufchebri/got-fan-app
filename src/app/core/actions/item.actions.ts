@@ -1,6 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 import { Query } from '../models/query.model';
-import { Character } from '../models/characater.model';
+import { Character } from '../models/character.model';
 import { Book } from '../models/book.model';
 import { House } from '../models/house.model';
 

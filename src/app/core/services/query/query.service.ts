@@ -1,47 +1,35 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, BehaviorSubject, of } from 'rxjs';
-import { Query } from '../../models/query.model';
-import * as _ from 'lodash';
-import { tap, map } from 'rxjs/operators';
-import { Character } from '../../models/characater.model';
-import { Book } from '../../models/book.model';
-import { House } from '../../models/house.model';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { Observable, combineLatest } from 'rxjs';
+import { map } from 'rxjs/operators';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root'
+})
 export class QueryService {
-  constructor(private http: HttpClient) { }
 
-  get(queries: Query[]) {
+  constructor(private afs: AngularFirestore) { }
 
-    const response = new BehaviorSubject([]);
-
-    queries.forEach(query => {
-      const urlSplit = query.url.split('/');
-      const resource = urlSplit.pop();
-      let url = query.url + '?' + `page=${query.page}&pageSize=${query.pageSize}&`;
-      const props = Object.keys(query.filters);
-      props.forEach(prop => {
-        const value = query.filters[prop];
-        if (value != null) {
-          url = url + `${prop}=${value}&`;
-        }
-      });
-      const items$ = this.http.get<any[]>(url).pipe(map(items => {
-        return items.map(item => {
-          return { ...item, resource };
-        });
-      }));
-
-      items$.pipe(tap(items => {
-        response.next(_.concat(response.getValue(), items));
-      })).subscribe();
-    });
-    return response;
+  search(query: string) {
+    const queryToLowerCase = query.toLowerCase();
+    const names$: Observable<any[]> = this.afs.collection(`items`
+      , ref => ref.where('name', '>=', queryToLowerCase).where('name', '<=', queryToLowerCase + '\uf8ff')
+    ).valueChanges();
+    const meta$: Observable<any[]> = this.afs.collection(`items`
+      , ref => ref.where('meta', '>=', queryToLowerCase).where('meta', '<=', queryToLowerCase + '\uf8ff')
+    ).valueChanges();
+    // tslint:disable-next-line: deprecation
+    return combineLatest(names$, meta$, (names, meta) => names.concat(meta))
   }
 
-  getById(resource: string, id: string) {
-    const URL = `https://www.anapioficeandfire.com/api/${resource}/${id}`;
-    return this.http.get<Book | Character | House>(URL);
+  getCultures() {
+    return this.afs.collection<{ name: string }>(`cultures`, ref =>
+      ref.orderBy('name')).valueChanges()
+      .pipe(map(cultures => cultures.map(culture => culture.name)));
+  }
+  getRegions() {
+    return this.afs.collection<{ name: string }>(`regions`, ref =>
+      ref.orderBy('name')).valueChanges()
+      .pipe(map(cultures => cultures.map(culture => culture.name)));
   }
 }

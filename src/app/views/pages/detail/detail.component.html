@@ -1,24 +1,40 @@
-<div *ngIf="item$ | async as item" class="ui grid">
+<div *ngIf="(item$ | async) as item" class="ui grid">
   <div class="six wide column">
     <div class="ui link cards">
-      <div class="card">
+      <div *ngIf="favorites$ | async" class="card">
         <div class="image">
           <img src="https://semantic-ui.com/images/avatar2/large/elyse.png">
         </div>
         <div class="content">
+          <i (click)="toggleFavorite(item.url)" [ngClass]="{
+            'right floated star icon': true, 
+            'yellow':isFavorite(item)
+          }"></i>
           <div class="header">{{item['name'] ? item.name : 'Unknown'}}</div>
+        </div>
+        <div (click)="toggleFavorite(item.url)" [ngClass]="{
+          'ui bottom attached button': true,
+          'green': isFavorite(item)
+        }">
+          <i [ngClass]="{
+            'icon' : true, 
+            'add': !isFavorite(item), 
+            'remove': isFavorite(item)
+          }"></i>
+          <span *ngIf="!isFavorite(item)">Add to favorite</span>
+          <span *ngIf="isFavorite(item)">Remove from favorite</span>
         </div>
       </div>
     </div>
   </div>
-  <div class="ten wide column">
+  <div *ngIf="favorites$ | async" class="ten wide column">
     <div class="ui card" *ngIf="keys$ | async as keys">
       <div class="content" *ngFor="let key of keys">
         <div class="header">{{ camelCaseToSentence(key) }}</div>
-        <div *ngIf="isString(key)" class="description">{{item[key] ? item[key] : 'Unknown'}}</div>
+        <div *ngIf="isString(key) && key != 'characters'" class="description">{{item[key] ? item[key] : 'Unknown'}}</div>
         <div *ngIf="!isString(key)" class="description">
           <div *ngFor="let element of key">
-            {{element}}
+            <div>{{element}}</div>
           </div>
         </div>
       </div>

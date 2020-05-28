@@ -6,13 +6,21 @@ export const environment = {
   production: false,
   uid: '',
   firebase: {
-    apiKey: 'AIzaSyCENXrsAloxbuIwEllp3XXJk8DlLt6h0_E',
-    authDomain: 'chebri.firebaseapp.com',
-    databaseURL: 'https://chebri.firebaseio.com',
-    projectId: 'chebri',
-    storageBucket: 'chebri.appspot.com',
-    messagingSenderId: '381270283463',
-    appId: '1:381270283463:web:8ba613d0aa669202e99ae2'
+    // apiKey: 'AIzaSyCENXrsAloxbuIwEllp3XXJk8DlLt6h0_E',
+    // authDomain: 'chebri.firebaseapp.com',
+    // databaseURL: 'https://chebri.firebaseio.com',
+    // projectId: 'chebri',
+    // storageBucket: 'chebri.appspot.com',
+    // messagingSenderId: '381270283463',
+    // appId: '1:381270283463:web:8ba613d0aa669202e99ae2'
+    apiKey: 'AIzaSyDSBnca6YyeoGSVh5O8JCT3ZxmRruGYR98',
+    authDomain: 'got-fan-app.firebaseapp.com',
+    databaseURL: 'https://got-fan-app.firebaseio.com',
+    projectId: 'got-fan-app',
+    storageBucket: 'got-fan-app.appspot.com',
+    messagingSenderId: '877411980811',
+    appId: '1:877411980811:web:1340413564db98ec9d990e',
+    measurementId: 'G-428X0JC7S8'
   },
 
 };

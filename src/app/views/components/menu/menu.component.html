@@ -4,7 +4,7 @@
     <a [routerLink]="['/search']" routerLinkActive="router-link-active" class="item">
       <img class="logo" src="../../../../assets/images/logo.png" style="width: 70px;">
     </a>
-    <a [routerLink]="['/detail']" routerLinkActive="router-link-active" class="item"><i class="star icon"></i>
+    <a [routerLink]="['/favorite']" routerLinkActive="router-link-active" class="item"><i class="star icon"></i>
       Favorite</a>
     <div class="item right" *ngIf="user$ | async as user">
       <img class="ui avatar image" [src]="user.photoUrl">

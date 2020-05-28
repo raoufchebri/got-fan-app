@@ -1,13 +1,13 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { QueryService } from 'src/app/core/services/query/query.service';
+import { ItemService } from 'src/app/core/services/item/item.service';
 import { Observable, combineLatest } from 'rxjs';
 import { map, tap, take } from 'rxjs/operators';
 import { Book } from 'src/app/core/models/book.model';
 import { Store } from '@ngrx/store';
 import { AppState } from 'src/app/app.reducers';
-import { selectQueryCollection, selectResponseCollection, selectFilter, selectQuery } from 'src/app/core/selectors/query.selectors';
-import { Character } from 'src/app/core/models/characater.model';
-import * as queryActions from 'src/app/core/actions/query.actions';
+import { selectQueryCollection, selectResponseCollection, selectFilter, selectItemState } from 'src/app/core/selectors/item.selectors';
+import { Character } from 'src/app/core/models/character.model';
+import * as queryActions from 'src/app/core/actions/item.actions';
 
 import { BehaviorSubject } from 'rxjs';
 import * as _ from 'lodash';
@@ -15,6 +15,9 @@ import { CharacterService } from 'src/app/core/services/characters/character.ser
 import { NgxSpinnerService } from 'ngx-spinner';
 import { House } from 'src/app/core/models/house.model';
 import { Query } from 'src/app/core/models/query.model';
+import { FavoriteService } from 'src/app/core/services/favorite/favorite.service';
+import { selectUserId } from 'src/app/core/auth/selectors/auth.selectors';
+import { Favorite } from 'src/app/core/models';
 
 @Component({
   selector: 'app-search-result',
@@ -25,15 +28,20 @@ export class SearchResultComponent implements OnInit, OnChanges {
 
 
   items$: any;
+  favorites = new Map<string, Favorite>();
+  uid: string;
   @Input() items: any[];
 
   constructor(
     private characterService: CharacterService,
     private store: Store<AppState>,
     private spinner: NgxSpinnerService,
-    private itemService: QueryService) { }
+    private itemService: ItemService,
+    private favoriteService: FavoriteService,
+  ) { }
 
   ngOnInit(): void {
+
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -47,4 +55,5 @@ export class SearchResultComponent implements OnInit, OnChanges {
 
     return ['/detail', type, id];
   }
+
 }

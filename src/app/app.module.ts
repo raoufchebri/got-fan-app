@@ -23,15 +23,14 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 // Ngrx Store
 import { reducers } from './app.reducers';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
-import { BookEffects } from './core/effects/book.effects';
-import { CharacterEffects } from './core/effects/character.effects';
-import { QueryEffects } from './core/effects/query.effects.';
+import { ItemEffects } from './core/effects/item.effects.';
 import { AuthEffects } from './core/auth/effects/auth.effects';
 
 //Firestore
@@ -42,6 +41,7 @@ import { AngularFireAuthModule } from '@angular/fire/auth/';
 import { AngularFireStorageModule } from '@angular/fire/storage/';
 import { UserEffects } from './core/auth/effects/user.effects';
 import { NotFoundComponent } from './views/pages/not-found/not-found.component';
+import { FavoriteComponent } from './views/pages/favorite/favorite.component';
 
 
 
@@ -54,7 +54,8 @@ import { NotFoundComponent } from './views/pages/not-found/not-found.component';
     MenuComponent,
     SearchBarComponent,
     SearchResultComponent,
-    NotFoundComponent
+    NotFoundComponent,
+    FavoriteComponent
   ],
   imports: [
     BrowserModule,
@@ -68,6 +69,7 @@ import { NotFoundComponent } from './views/pages/not-found/not-found.component';
     MatInputModule,
     MatButtonModule,
     MatIconModule,
+    MatAutocompleteModule,
     FormsModule,
     ReactiveFormsModule,
     InfiniteScrollModule,
@@ -81,7 +83,7 @@ import { NotFoundComponent } from './views/pages/not-found/not-found.component';
     EffectsModule.forRoot([
       // BookEffects,
       // CharacterEffects,
-      QueryEffects,
+      ItemEffects,
       AuthEffects,
       UserEffects
     ]),

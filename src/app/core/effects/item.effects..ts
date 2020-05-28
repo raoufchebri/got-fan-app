@@ -1,37 +1,37 @@
 import { createEffect, ofType, Actions } from '@ngrx/effects';
-import * as queryActions from '../actions/query.actions';
+import * as itemActions from '../actions/item.actions';
 import { mergeMap, map, catchError } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { of } from 'rxjs';
-import { QueryService } from '../services/query/query.service';
+import { ItemService } from '../services/item/item.service';
 
 @Injectable()
-export class QueryEffects {
+export class ItemEffects {
 
     loadItems$ = createEffect(() => {
         return this.actions$.pipe(
-                ofType(queryActions.loadCollection),
+                ofType(itemActions.loadCollection),
                 mergeMap(({queries}) =>
                     this.queryService.get(queries).pipe(
-                        map(response => queryActions.loadSuccess({ response })),
-                        catchError(error => of(queryActions.loadFailure({ error }))))
+                        map(response => itemActions.loadSuccess({ response })),
+                        catchError(error => of(itemActions.loadFailure({ error }))))
                     ),
         );
     });
 
     loadItem$ = createEffect(() => {
         return this.actions$.pipe(
-                ofType(queryActions.loadOne),
+                ofType(itemActions.loadOne),
                 mergeMap(({resource, id}) =>
                     this.queryService.getById(resource, id).pipe(
-                        map(response => queryActions.loadOneSuccess({ response })),
-                        catchError(error => of(queryActions.loadFailure({ error }))))
+                        map(response => itemActions.loadOneSuccess({ response })),
+                        catchError(error => of(itemActions.loadFailure({ error }))))
                     ),
         );
     });
 
     constructor(
         private actions$: Actions,
-        private queryService: QueryService
+        private queryService: ItemService
     ) { }
 }

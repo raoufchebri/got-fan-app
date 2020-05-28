@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Character } from '../../models/characater.model';
+import { Character } from '../../models/character.model';
 import { Observable } from 'rxjs';
 
 @Injectable({

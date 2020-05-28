@@ -2,12 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AppState } from 'src/app/app.reducers';
 import { Store, select } from '@ngrx/store';
-import { loadOne } from 'src/app/core/actions/query.actions';
-import { selectItem, selectLoadingStatus } from 'src/app/core/selectors/query.selectors';
+import { loadOne } from 'src/app/core/actions/item.actions';
+import { selectItem, selectLoadingStatus } from 'src/app/core/selectors/item.selectors';
 import { Observable } from 'rxjs';
-import { QueryService } from 'src/app/core/services/query/query.service';
-import { map } from 'rxjs/operators';
+import { ItemService } from 'src/app/core/services/item/item.service';
+import { map, tap } from 'rxjs/operators';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { FavoriteService } from 'src/app/core/services/favorite/favorite.service';
+import { selectUserId } from 'src/app/core/auth/selectors/auth.selectors';
+import { Favorite, Book, Character, House } from 'src/app/core/models';
 
 
 @Component({
@@ -18,14 +21,19 @@ import { NgxSpinnerService } from 'ngx-spinner';
 export class DetailComponent implements OnInit {
   item$: Observable<any>;
   keys$: Observable<string[]>;
+  uid: string;
+  favorites = new Map<string, Favorite>();
+  favorites$: Observable<Favorite[]>;
 
   constructor(
     private route: ActivatedRoute,
     private store: Store<AppState>,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private favoriteService: FavoriteService,
   ) { }
 
   ngOnInit(): void {
+    this.spinner.show();
     this.store.select(selectLoadingStatus).subscribe(status => {
       if (status) {
         this.spinner.show();
@@ -38,6 +46,17 @@ export class DetailComponent implements OnInit {
     this.store.dispatch(loadOne({ resource, id }));
     this.item$ = this.store.select(selectItem);
     this.keys$ = this.item$.pipe(map(item => Object.keys(item)));
+
+    this.store.select(selectUserId).pipe(tap(uid => {
+      this.uid = uid;
+      this.favorites$ = this.favoriteService.get(uid);
+      this.favoriteService.get(uid).pipe(tap(fav => {
+        fav.forEach(f => {
+          this.favorites.set(f.url, f);
+        });
+      })).subscribe();
+      this.spinner.hide();
+    })).subscribe();
   }
 
   getId(url: string) {
@@ -54,4 +73,19 @@ export class DetailComponent implements OnInit {
     return typeof obj === 'string';
   }
 
+
+  toggleFavorite(url) {
+    if (this.favorites.has(url)) {
+      this.favoriteService.delete(this.favorites.get(url).id);
+      this.favorites.delete(url);
+    } else {
+      this.favoriteService.add({url, uid: this.uid}).then(doc => {
+        this.favorites.set(url, {url, uid: this.uid, id: doc.id});
+      });
+    }
+  }
+
+  isFavorite(item: Book | Character | House) {
+    return this.favorites.has(item.url);
+  }
 }

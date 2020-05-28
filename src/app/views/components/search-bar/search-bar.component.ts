@@ -4,8 +4,12 @@ import { AppState } from 'src/app/app.reducers';
 import { FormControl } from '@angular/forms';
 import { BookFilter, CharacterFilter, HouseFilter } from 'src/app/core/models/filters.model';
 import { Query } from 'src/app/core/models/query.model';
-import * as resourceActions from 'src/app/core/actions/query.actions';
+import * as resourceActions from 'src/app/core/actions/item.actions';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { QueryService } from 'src/app/core/services/query/query.service';
+import { Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 declare var $: any;
 @Component({
@@ -19,8 +23,11 @@ export class SearchBarComponent implements OnInit {
   bookFilter = true;
   characterFilter = true;
   houseFilter = true;
-  resources = ['All', 'Books', 'Characters', 'Houses'];
-  resourceControl = new FormControl('Characters');
+  resources = ['Books', 'Characters', 'Houses'];
+  resourceControl = new FormControl();
+  queryControl = new FormControl();
+  options$: Observable<string[]>;
+  searchOptions: Observable<any[]> = of([]);
 
   // Book filters
   minDate = new Date('1990/01/01');
@@ -30,35 +37,39 @@ export class SearchBarComponent implements OnInit {
 
   // Characters filters
   genders = ['All', 'Male', 'Female'];
-  cultures = ['All'];
+  cultures$: Observable<string[]>;
   options = ['All', 'Yes', 'No'];
   genderControl = new FormControl('All');
-  cultureControl = new FormControl('All');
+  cultureControl = new FormControl();
   isAliveControl = new FormControl('All');
 
   // House filters
-  regionControl = new FormControl('All');
+  regionControl = new FormControl();
   wordsControl = new FormControl('All');
   titlesControl = new FormControl('All');
   seatsControl = new FormControl('All');
   diedoutControl = new FormControl('All');
   ancesteralWeaponsControl = new FormControl('All');
-  regions = ['All'];
+  regions$: Observable<string[]>;
   words = ['All'];
   warning = false;
   pageSize = 10;
 
   constructor(
     private store: Store<AppState>,
-    private spinner: NgxSpinnerService
+    private queryService: QueryService,
+    private router: Router
+    // private spinner: NgxSpinnerService,
   ) { }
 
   ngOnInit(): void {
+    this.cultures$ = this.queryService.getCultures();
+    this.regions$ = this.queryService.getRegions();
   }
 
-  onSearch(query: string) {
+  onSearch() {
     const resource = this.resourceControl.value;
-
+    const query = '';
     // Books Filters
     const bookFilters: BookFilter = {
       name: query === '' ? null : query,
@@ -101,7 +112,7 @@ export class SearchBarComponent implements OnInit {
       hasDiedOut: this.diedoutControl.value === 'Yes' ? true : this.diedoutControl.value === 'No' ? false : null,
       hasAncestralWeapons: this.ancesteralWeaponsControl.value === 'Yes' ? true
         : this.ancesteralWeaponsControl.value === 'No' ? false : null,
-    }
+    };
     const houseQuery: Query = {
       url: 'https://www.anapioficeandfire.com/api/houses',
       filters: houseFilter,
@@ -117,14 +128,30 @@ export class SearchBarComponent implements OnInit {
   }
 
   toggleFilter() {
-    if (this.resourceControl.value === 'All') {
-      this.warning = true;
-    } else {
-      this.filter = !this.filter;
+    // if (this.resourceControl.value === 'All') {
+    //   this.warning = true;
+    // } else {
+    //   this.filter = !this.filter;
+    // }
+    this.filter = !this.filter;
+  }
+
+  onFilter() {
+    const query = this.queryControl.value;
+    if (query.length > 1) {
+      this.searchOptions = this.queryService.search(query)
+        .pipe(map(data => {
+          return data.map(item => ({ text: item.name, url: item.url }))
+          // .concat(data.map(item => ({text: item.meta, url: item.url})));
+        }));
     }
   }
 
-  onFilter(filter: string) {
-    this.store.dispatch(resourceActions.filterOut({filter}));
+  onAutocomplete(url) {
+    const stack = url.split('/');
+    const id = stack.pop();
+    const type = stack.pop();
+    console.log(url)
+    this.router.navigateByUrl(`/detail/${type}/${id}`);
   }
 }
