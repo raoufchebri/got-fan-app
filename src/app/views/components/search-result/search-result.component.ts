@@ -31,6 +31,7 @@ export class SearchResultComponent implements OnInit, OnChanges {
   favorites = new Map<string, Favorite>();
   uid: string;
   @Input() items: any[];
+  favorites$: Observable<Favorite[]>;
 
   constructor(
     private characterService: CharacterService,
@@ -41,7 +42,15 @@ export class SearchResultComponent implements OnInit, OnChanges {
   ) { }
 
   ngOnInit(): void {
-
+    this.store.select(selectUserId).pipe(tap(uid => {
+      this.uid = uid;
+      this.favorites$ = this.favoriteService.get(uid);
+      this.favorites$.pipe(tap(fav => {
+        fav.forEach(f => {
+          this.favorites.set(f.url, f);
+        });
+      })).subscribe();
+    })).subscribe();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -54,6 +63,10 @@ export class SearchResultComponent implements OnInit, OnChanges {
     const type = stack.pop();
 
     return ['/detail', type, id];
+  }
+
+  isFavorite(url: string) {
+    return this.favorites.has(url);
   }
 
 }

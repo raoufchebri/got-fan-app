@@ -1,2 +1,4 @@
-
-  <button (click)="submit()">Submit</button>
+<h1>Favorite Items</h1>
+<div *ngIf="items$ | async as data" class="search result">
+  <app-search-result [items]="items$"></app-search-result>
+</div>

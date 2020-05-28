@@ -12,7 +12,7 @@ import { FavoriteService } from 'src/app/core/services/favorite/favorite.service
 import { selectUserId } from 'src/app/core/auth/selectors/auth.selectors';
 import { Favorite, Book, Character, House } from 'src/app/core/models';
 
-
+declare var $: any;
 @Component({
   selector: 'app-detail',
   templateUrl: './detail.component.html',
@@ -33,6 +33,7 @@ export class DetailComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+
     this.spinner.show();
     this.store.select(selectLoadingStatus).subscribe(status => {
       if (status) {
@@ -50,7 +51,7 @@ export class DetailComponent implements OnInit {
     this.store.select(selectUserId).pipe(tap(uid => {
       this.uid = uid;
       this.favorites$ = this.favoriteService.get(uid);
-      this.favoriteService.get(uid).pipe(tap(fav => {
+      this.favorites$.pipe(tap(fav => {
         fav.forEach(f => {
           this.favorites.set(f.url, f);
         });
@@ -79,13 +80,22 @@ export class DetailComponent implements OnInit {
       this.favoriteService.delete(this.favorites.get(url).id);
       this.favorites.delete(url);
     } else {
-      this.favoriteService.add({url, uid: this.uid}).then(doc => {
-        this.favorites.set(url, {url, uid: this.uid, id: doc.id});
+      this.favoriteService.add({ url, uid: this.uid }).then(doc => {
+        this.favorites.set(url, { url, uid: this.uid, id: doc.id });
       });
     }
   }
 
   isFavorite(item: Book | Character | House) {
     return this.favorites.has(item.url);
+  }
+
+  formatString(text: string) {
+    const limit = 35;
+    if (text.length < limit) {
+      return text;
+    } else {
+      return text.substring(0, limit) + ' ...';
+    }
   }
 }

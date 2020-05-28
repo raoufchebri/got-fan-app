@@ -3,6 +3,11 @@ import { ItemService } from 'src/app/core/services/item/item.service';
 import { tap, map } from 'rxjs/operators';
 import { FavoriteService } from 'src/app/core/services/favorite/favorite.service';
 import { FormControl } from '@angular/forms';
+import { selectUserId } from 'src/app/core/auth/selectors/auth.selectors';
+import { AppState } from 'src/app/app.reducers';
+import { Store } from '@ngrx/store';
+import { BehaviorSubject } from 'rxjs';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-favorite',
@@ -12,35 +17,27 @@ import { FormControl } from '@angular/forms';
 export class FavoriteComponent implements OnInit {
 
   set = new Set<string>();
-  constructor(private itemService: ItemService, private favoriteService: FavoriteService) { }
+  items$ = new BehaviorSubject([]);
+  constructor(
+    private itemService: ItemService, 
+    private favoriteService: FavoriteService,
+    private store: Store<AppState>
+    ) { }
 
   ngOnInit(): void {
-    // for (let page = 1; page <= 43; page++) {
-    //   this.itemService.get([{
-    //     url: 'https://www.anapioficeandfire.com/api/characters',
-    //     filters: {
-    //       name: null,
-    //       fromReleaseDate: null,
-    //       toReleaseDate: null,
-    //     },
-    //     page,
-    //     pageSize: 50,
-    //     resource: 'books'
-    //   }]).pipe(tap(data => {
-    //     const cultureArray = data.map(item => item.culture);
-    //     cultureArray.forEach(element => {
-    //       this.set.add(element);
-    //     });
-  
-    //   })).subscribe();
-    // }
-  }
-
-  submit() {
-    const items = Array.from<string>(this.set.keys()).filter(item => item !== '');
-    console.log(items);
-    // this.favoriteService.add(items);
-
+    this.store.select(selectUserId).pipe(tap(uid => {
+      this.favoriteService.get(uid).pipe(tap(favorites => {
+        favorites.forEach(fav => {
+          const splitUrl = fav.url.split('/');
+          const id = splitUrl.pop();
+          const resource = splitUrl.pop();
+          this.itemService.getById(resource, id).pipe(tap(item => {
+            const currentItems = this.items$.getValue();
+            this.items$.next(_.concat(currentItems, item));
+          })).subscribe();
+        });
+      })).subscribe();
+    })).subscribe();
   }
 
 }

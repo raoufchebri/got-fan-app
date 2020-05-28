@@ -7,7 +7,11 @@
       'green': element.resource === 'houses'}"
       >
       <div class="content">
-        <i class="right floated star icon"></i>
+        <i [ngClass]="{
+          'right floated star icon': true, 
+          'yellow':isFavorite(element.url),
+          'grey':!isFavorite(element.url)
+        }"></i>
         <div class="header">
           <i [ngClass]="{
             'ui icon':true, 

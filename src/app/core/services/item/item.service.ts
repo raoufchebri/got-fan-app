@@ -42,6 +42,6 @@ export class ItemService {
 
   getById(resource: string, id: string) {
     const URL = `https://www.anapioficeandfire.com/api/${resource}/${id}`;
-    return this.http.get<Book | Character | House>(URL);
+    return this.http.get<Book | Character | House>(URL).pipe(map(item => ({...item, resource})));
   }
 }
