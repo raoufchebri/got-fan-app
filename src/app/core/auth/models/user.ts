@@ -6,6 +6,6 @@ export interface User {
     displayName: string;
     refreshToken: string;
     photoUrl: string;
-    phoneNumber: string;
+    phoneNumber?: string;
     role?: Role;
 }

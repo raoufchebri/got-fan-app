@@ -5,13 +5,11 @@ import { FormControl } from '@angular/forms';
 import { BookFilter, CharacterFilter, HouseFilter } from 'src/app/core/models/filters.model';
 import { Query } from 'src/app/core/models/query.model';
 import * as resourceActions from 'src/app/core/actions/item.actions';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { QueryService } from 'src/app/core/services/query/query.service';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
-declare var $: any;
 @Component({
   selector: 'app-search-bar',
   templateUrl: './search-bar.component.html',
@@ -122,17 +120,11 @@ export class SearchBarComponent implements OnInit {
     };
 
     const queries: Query[] = resource === 'Books' ? [bookQuery]
-      : resource === 'Characters' ? [characterQuery]
-        : resource === 'Houses' ? [houseQuery] : [bookQuery, characterQuery, houseQuery];
+      : resource === 'Characters' ? [characterQuery] : [houseQuery];
     this.store.dispatch(resourceActions.loadCollection({ queries }));
   }
 
   toggleFilter() {
-    // if (this.resourceControl.value === 'All') {
-    //   this.warning = true;
-    // } else {
-    //   this.filter = !this.filter;
-    // }
     this.filter = !this.filter;
   }
 
@@ -141,7 +133,7 @@ export class SearchBarComponent implements OnInit {
     if (query.length > 1) {
       this.searchOptions = this.queryService.search(query)
         .pipe(map(data => {
-          return data.map(item => ({ text: item.name, url: item.url }))
+          return data.map(item => ({ text: item.name, url: item.url }));
           // .concat(data.map(item => ({text: item.meta, url: item.url})));
         }));
     }
@@ -151,7 +143,7 @@ export class SearchBarComponent implements OnInit {
     const stack = url.split('/');
     const id = stack.pop();
     const type = stack.pop();
-    console.log(url)
+    console.log(url);
     this.router.navigateByUrl(`/detail/${type}/${id}`);
   }
 }

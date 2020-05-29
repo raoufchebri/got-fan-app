@@ -30,8 +30,8 @@ const resourceReducer = createReducer(
     on(resourceActions.loadCollection, (state, action) => ({ ...state, queries: action.queries, isLoading: true, isNewQuery: true })),
     on(resourceActions.loadNextPage, (state) => ({ ...state, isNewQuery: false })),
     on(resourceActions.loadOne, (state) => ({ ...state, isLoading: true })),
-    on(resourceActions.loadSuccess, (state, action) => ({ ...state, reponse: action.response, isLoading: false })),
-    on(resourceActions.loadOneSuccess, (state, action) => ({ ...state, item: action.response, isLoading: false })),
+    on(resourceActions.loadSuccess, (state, action) => ({ ...state, reponse: action.response, isLoading: false, isNewQuery: false })),
+    on(resourceActions.loadOneSuccess, (state, action) => ({ ...state, item: action.response, isLoading: false, isNewQuery: false })),
     on(resourceActions.loadFailure, (state, action) => ({ ...state, error: action.error, isLoading: false })),
     on(resourceActions.filterOut, (state, action) => ({ ...state, filter: action.filter})),
 );

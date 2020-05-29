@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AppState } from 'src/app/app.reducers';
 import { Store, select } from '@ngrx/store';
 import { loadOne } from 'src/app/core/actions/item.actions';
 import { selectItem, selectLoadingStatus } from 'src/app/core/selectors/item.selectors';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { ItemService } from 'src/app/core/services/item/item.service';
 import { map, tap } from 'rxjs/operators';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -27,9 +27,11 @@ export class DetailComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private store: Store<AppState>,
     private spinner: NgxSpinnerService,
     private favoriteService: FavoriteService,
+    private itemService: ItemService,
   ) { }
 
   ngOnInit(): void {
@@ -49,6 +51,8 @@ export class DetailComponent implements OnInit {
     this.keys$ = this.item$.pipe(map(item => Object.keys(item)));
 
     this.store.select(selectUserId).pipe(tap(uid => {
+      const url = `https://www.anapioficeandfire.com/api/${resource}/${id}`;
+      this.itemService.addView(uid, url);
       this.uid = uid;
       this.favorites$ = this.favoriteService.get(uid);
       this.favorites$.pipe(tap(fav => {
@@ -90,7 +94,7 @@ export class DetailComponent implements OnInit {
     return this.favorites.has(item.url);
   }
 
-  formatString(text: string) {
+  limitString(text: string) {
     const limit = 35;
     if (text.length < limit) {
       return text;

@@ -19,8 +19,8 @@ export class LoginComponent implements OnInit {
 
   loginForm: FormGroup;
   private readonly properties = {
-    email: [''],
-    password: ['']
+    email: ['admin@demo.com'],
+    password: ['admindemo']
   };
 
   error$: Observable<string>;
@@ -43,12 +43,12 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
-    const credentials = {
-      email: this.loginForm.controls['email'].value,
-      password: this.loginForm.controls['password'].value
+    const {email, password} = {
+      email: this.loginForm.controls.email.value,
+      password: this.loginForm.controls.password.value
     };
 
-    this.store.dispatch(login({ credentials }));
+    this.store.dispatch(login({email, password}));
   }
 
   googleLogin() {

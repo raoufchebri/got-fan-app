@@ -31,10 +31,10 @@
     <div class="ui card" *ngIf="keys$ | async as keys">
       <div class="content" *ngFor="let key of keys">
         <div class="header">{{ camelCaseToSentence(key) }}</div>
-        <div *ngIf="isString(key) && key != 'characters'" class="description">{{item[key] ? item[key] : 'Unknown'}}</div>
-        <div *ngIf="!isString(key)" class="description">
-          <div *ngFor="let element of key">
-            <div>{{element}}</div>
+        <div *ngIf="isString(item[key]) && key != 'characters'" class="description">{{item[key] ? item[key] : 'Unknown'}}</div>
+        <div *ngIf="!isString(item[key])" class="description">
+          <div *ngFor="let element of item[key]">
+            {{ element }}
           </div>
         </div>
       </div>
@@ -75,10 +75,10 @@
     <div class="ui card" *ngIf="keys$ | async as keys">
       <div class="content" *ngFor="let key of keys">
         <div class="header">{{ camelCaseToSentence(key) }}</div>
-        <div *ngIf="isString(key)" class="description">{{item[key] ? formatString(item[key]) : 'Unknown'}}</div>
-        <div *ngIf="!isString(key)" class="description">
-          <div *ngFor="let element of key">
-            <div>{{formatString(element)}}</div>
+        <div *ngIf="isString(item[key])" class="description">{{item[key] ? limitString(item[key]) : 'Unknown'}}</div>
+        <div *ngIf="!isString(item[key])" class="description">
+          <div *ngFor="let element of item[key]">
+            <div>{{limitString(element)}}</div>
           </div>
         </div>
       </div>

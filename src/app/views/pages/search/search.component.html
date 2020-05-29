@@ -4,8 +4,15 @@
 <app-search-bar></app-search-bar>
 <!-- <div class="ui divider"></div> -->
 
+<div *ngIf="recentlyViewed$ | async as data" class="recently viewed">
+  <div *ngIf="data.length == 3">
+    <h1>Recently viewed</h1>
+    <app-search-result [items]="recentlyViewed$"></app-search-result>
+  </div>
+</div>
+
 <div *ngIf="items$ | async as data" class="search result">
-    <app-search-result [items]="items$"></app-search-result>
+  <app-search-result [items]="items$"></app-search-result>
 </div>
 
 <div infiniteScroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="100" (scrolled)="onScroll()">

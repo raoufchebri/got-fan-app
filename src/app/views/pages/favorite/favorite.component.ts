@@ -26,7 +26,8 @@ export class FavoriteComponent implements OnInit {
 
   ngOnInit(): void {
     this.store.select(selectUserId).pipe(tap(uid => {
-      this.favoriteService.get(uid).pipe(tap(favorites => {
+      this.favoriteService.get(uid)
+      .pipe(tap(favorites => {
         favorites.forEach(fav => {
           const splitUrl = fav.url.split('/');
           const id = splitUrl.pop();

@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ItemService } from 'src/app/core/services/item/item.service';
-import { Observable, combineLatest } from 'rxjs';
-import { map, tap, take } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { Book } from 'src/app/core/models/book.model';
 import { Store } from '@ngrx/store';
 import { AppState } from 'src/app/app.reducers';
-import { selectQueryCollection, selectResponseCollection, selectFilter, selectItemState } from 'src/app/core/selectors/item.selectors';
+import { selectQueryCollection, selectFilter, selectItemState } from 'src/app/core/selectors/item.selectors';
 import { Character } from 'src/app/core/models/character.model';
-import * as queryActions from 'src/app/core/actions/item.actions';
 
 import { BehaviorSubject } from 'rxjs';
 import * as _ from 'lodash';
@@ -15,6 +14,7 @@ import { CharacterService } from 'src/app/core/services/characters/character.ser
 import { NgxSpinnerService } from 'ngx-spinner';
 import { House } from 'src/app/core/models/house.model';
 import { Query } from 'src/app/core/models/query.model';
+import { selectUserId } from 'src/app/core/auth/selectors/auth.selectors';
 
 @Component({
   selector: 'app-search',
@@ -34,23 +34,50 @@ export class SearchComponent implements OnInit {
   data$: Observable<any[]>;
   queries: Query[];
   filter: string;
+  recentlyViewed$ = new BehaviorSubject([]);
   constructor(
-    private characterService: CharacterService,
     private store: Store<AppState>,
     private spinner: NgxSpinnerService,
     private itemService: ItemService) { }
 
   ngOnInit(): void {
+    this.spinner.show();
     this.initQuery();
     this.store.select(selectFilter).subscribe(filter => this.filter = filter);
+    this.getRecentlyViewed();
+  }
+
+  private getRecentlyViewed() {
+    this.store.select(selectUserId).pipe(tap(uid => {
+      this.itemService.getRecentlyViewed(uid)
+        .pipe(tap(views => {
+          if(views.length > 0) {
+            for (let i = 0; i < 3; i++) {
+              const view = views[i];
+              const splitUrl = view.url.split('/');
+              const id = splitUrl.pop();
+              const resource = splitUrl.pop();
+              this.itemService.getById(resource, id).pipe(tap(item => {
+                const currentItems = this.recentlyViewed$.getValue();
+                this.recentlyViewed$.next(_.concat(currentItems, item));
+                this.spinner.hide();
+              })).subscribe();
+            }
+          }
+          else {
+            this.spinner.hide();
+          }
+        })).subscribe();
+    })).subscribe();
   }
 
   initQuery() {
     this.store.select(selectItemState).subscribe(item => {
-      const {isNewQuery} = item;
+      const { isNewQuery } = item;
       if (isNewQuery) {
-            this.items$ = new BehaviorSubject([]);
-            this.page = 1;
+        this.items$ = new BehaviorSubject([]);
+        this.page = 1;
+        this.finished = false;
       }
     });
     this.store.select(selectQueryCollection)
@@ -68,10 +95,12 @@ export class SearchComponent implements OnInit {
   }
 
   getItems() {
-    this.store.dispatch(queryActions.loadNextPage());
+    this.recentlyViewed$ = null;
+    // this.store.dispatch(queryActions.loadNextPage());
     if (this.finished) { return; }
     this.spinner.show();
     this.queries = this.queries.map(query => ({ ...query, page: this.page }));
+    console.log(this.queries);
     this.itemService.get(this.queries)
       .pipe(tap(newItems => {
         if (newItems && newItems.length > 0) {
@@ -80,7 +109,6 @@ export class SearchComponent implements OnInit {
           if (this.lastKey === _.last(newItems).url || newItems.length < this.pageSize) {
             this.finished = true;
           }
-          const filter = this.queries[0].filters.name;
           this.lastKey = _.last(newItems).url;
           this.items$.next(_.concat(currentItems, newItems));
           this.spinner.hide();

@@ -3,7 +3,7 @@ import { of, Observable, throwError, EMPTY, from } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import * as firebase from 'firebase';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { map, switchMap, tap, take } from 'rxjs/operators';
 import { AngularFirestore } from '@angular/fire/firestore/';
 import { User } from '../models/user';
 
@@ -32,8 +32,10 @@ export class AuthService {
     });
     return from(promise).pipe(map(cred => cred.user));
   }
-  loginWithEmailAndPassword() {
-    return from(this.afAuth.signInWithPopup(new firebase.auth.GoogleAuthProvider())).pipe(map(cred => cred.user));
+  
+  loginWithEmailAndPassword(email: string, password: string): Observable<firebase.User> {
+    return from(this.afAuth.signInWithEmailAndPassword(email, password))
+    .pipe(map(cred => cred.user));
   }
   logout() {
     this.afAuth.signOut();

@@ -1,4 +1,12 @@
-<h1>Favorite Items</h1>
-<div *ngIf="items$ | async as data" class="search result">
-  <app-search-result [items]="items$"></app-search-result>
+<div *ngIf="items$ | async as data" class="segment">
+  <div *ngIf="data.length > 0" class="search result">
+    <h1>Favorite Items</h1>
+    <app-search-result [items]="items$"></app-search-result>
+  </div>
+  <div *ngIf="data.length == 0" class="error">
+    <div class="content">
+        <p>You don't have any favorite items</p>
+    </div>
+    <a [routerLink]="['/search']" routerLinkActive="router-link-active" >Go to search page</a>
+  </div>
 </div>
