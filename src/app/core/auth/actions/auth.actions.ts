@@ -1,5 +1,4 @@
 import { createAction, props } from '@ngrx/store';
-import { User } from '../models/user';
 
 export const login = createAction('[Login Page] Login', props<{ email: string; password: string}>());
 export const googleLogin = createAction('[Login Page] Login with Google');

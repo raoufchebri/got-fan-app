@@ -9,9 +9,12 @@ import { DetailComponent } from './views/pages/detail/detail.component';
 import { MenuComponent } from './views/components/menu/menu.component';
 import { SearchBarComponent } from './views/components/search-bar/search-bar.component';
 import { SearchResultComponent } from './views/components/search-result/search-result.component';
+import { NotFoundComponent } from './views/pages/not-found/not-found.component';
+import { FavoriteComponent } from './views/pages/favorite/favorite.component';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { NgxSpinnerModule } from 'ngx-spinner';
 
@@ -40,8 +43,6 @@ import { environment } from 'src/environments/environment';
 import { AngularFireAuthModule } from '@angular/fire/auth/';
 import { AngularFireStorageModule } from '@angular/fire/storage/';
 import { UserEffects } from './core/auth/effects/user.effects';
-import { NotFoundComponent } from './views/pages/not-found/not-found.component';
-import { FavoriteComponent } from './views/pages/favorite/favorite.component';
 
 
 
@@ -81,8 +82,6 @@ import { FavoriteComponent } from './views/pages/favorite/favorite.component';
       // logOnly: environment.production, // Restrict extension to log-only mode
     }),
     EffectsModule.forRoot([
-      // BookEffects,
-      // CharacterEffects,
       ItemEffects,
       AuthEffects,
       UserEffects

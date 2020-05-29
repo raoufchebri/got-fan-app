@@ -41,7 +41,7 @@ export class DetailComponent implements OnInit {
       if (status) {
         this.spinner.show();
       } else {
-        this.spinner.hide();
+        // this.spinner.hide();
       }
     });
     const resource = this.route.snapshot.paramMap.get('type');
@@ -59,8 +59,8 @@ export class DetailComponent implements OnInit {
         fav.forEach(f => {
           this.favorites.set(f.url, f);
         });
+        this.spinner.hide();
       })).subscribe();
-      this.spinner.hide();
     })).subscribe();
   }
 

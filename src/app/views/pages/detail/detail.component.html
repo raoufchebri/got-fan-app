@@ -3,7 +3,9 @@
     <div class="ui link cards">
       <div *ngIf="favorites$ | async" class="card">
         <div class="image">
-          <img src="https://semantic-ui.com/images/avatar2/large/elyse.png">
+          <img *ngIf="item.resource == 'houses'" src="https://designetattoo.com/wp-content/uploads/2020/02/game-of-thrones-sigils-bundle-preview.jpg">
+          <img *ngIf="item.resource == 'books'" src="https://images-na.ssl-images-amazon.com/images/I/B13y0wkRabS._SY300_.png">
+          <img *ngIf="item.resource == 'characters'" src="https://cdn.dribbble.com/users/2002619/screenshots/6176568/jon_snow_mesa_de_trabajo_1_2x.jpg">
         </div>
         <div class="content">
           <i (click)="toggleFavorite(item.url)" [ngClass]="{

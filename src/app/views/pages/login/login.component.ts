@@ -34,7 +34,14 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
     this.error$ = this.store.select(selectAuth).pipe(map(state => state.error));
     this.loginForm = this.formBuilder.group(this.properties);
+    this.detectUser();
+  }
 
+   /**
+    * @description
+    * Verifies if user is logged in
+    */
+  private detectUser() {
     this.store.select(selectUserProperty).pipe(tap(user => {
       if (user) {
         this.router.navigateByUrl('/search');

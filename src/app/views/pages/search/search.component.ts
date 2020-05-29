@@ -10,7 +10,6 @@ import { Character } from 'src/app/core/models/character.model';
 
 import { BehaviorSubject } from 'rxjs';
 import * as _ from 'lodash';
-import { CharacterService } from 'src/app/core/services/characters/character.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { House } from 'src/app/core/models/house.model';
 import { Query } from 'src/app/core/models/query.model';
@@ -96,11 +95,9 @@ export class SearchComponent implements OnInit {
 
   getItems() {
     this.recentlyViewed$ = null;
-    // this.store.dispatch(queryActions.loadNextPage());
     if (this.finished) { return; }
     this.spinner.show();
     this.queries = this.queries.map(query => ({ ...query, page: this.page }));
-    console.log(this.queries);
     this.itemService.get(this.queries)
       .pipe(tap(newItems => {
         if (newItems && newItems.length > 0) {
